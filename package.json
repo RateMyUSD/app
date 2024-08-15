@@ -1,6 +1,7 @@
 {
   "name": "usd",
   "version": "0.1.0",
+  "description": "A web application that allows students to rate their professors and courses at the University of San Diego.",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,8 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "format": "prettier --check --ignore-path .gitignore .",
-    "format:fix": "prettier --write --ignore-path .gitignore ."
+    "format": "prettier --check .",
+    "format:fix": "prettier --write ."
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",
