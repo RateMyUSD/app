@@ -1,0 +1,77 @@
+name: 'Check Build'
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+  pull_request:
+    paths: ['src/**', '.github/workflows/CI_CHECK_BUILD.yml']
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  pnpm:
+    name: Install dependencies (pnpm)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/pnpm-install
+
+  analyze:
+    runs-on: ubuntu-latest
+    needs: pnpm
+    permissions:
+      security-events: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript-typescript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+
+  eslint:
+    name: check linting (eslint)
+    needs: pnpm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: ./.github/actions/pnpm-install
+
+      - name: Run eslint
+        run: pnpm lint
+
+  prettier:
+    name: check formatting (prettier)
+    needs: pnpm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: ./.github/actions/pnpm-install
+
+      - name: Run prettier
+        run: pnpm format
+
+  build:
+    name: build (pnpm)
+    needs: [eslint, prettier]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: ./.github/actions/pnpm-install
+
+      - name: Run build
+        run: pnpm build
