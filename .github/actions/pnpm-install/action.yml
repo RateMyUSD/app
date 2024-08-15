@@ -30,10 +30,6 @@ inputs:
     description: "Changes node's process.cwd() if the project is not located on the root. Default to process.cwd()"
     required: false
     default: '.'
-  cache:
-    description: 'Use a node cache'
-    required: false
-    default: 'pnpm'
 
 runs:
   using: 'composite'
@@ -43,7 +39,6 @@ runs:
       uses: actions/setup-node@v3
       with:
         node-version: '20'
-        cache: ${{ inputs.cache }}
 
     - name: Setup pnpm
       uses: pnpm/action-setup@v4
