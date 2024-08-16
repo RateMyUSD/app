@@ -67,7 +67,7 @@ export default function Page() {
               </Link>
               <div className="flex flex-col px-2">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {course.professors_overalls.map(
+                  {course.professors_overalls.slice(0, 4).map(
                     ({ professor, profile_icon, overall }) => (
                       <Link
                         href={`/professors/${professor}/${course.id}`}

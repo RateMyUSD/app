@@ -40,9 +40,8 @@ export type ProfessorCourseRatingOverall = BaseProfessorCourseRating & {
 
 export type ProfessorCourseReview = BaseProfessorCourseRating & {
   author: string;
+  body: string;
   metrics: Record<RatingMetric, number>;
-  likes: number;
-  dislikes: number;
   term: string;
   grade?: string;
   date: Date;
