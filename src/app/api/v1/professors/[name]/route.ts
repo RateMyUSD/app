@@ -16,6 +16,6 @@ export async function GET(
   if (!professor) {
     return Response.json({ error: 'Professor not found' }, { status: 404 });
   }
-  
+
   return Response.json(professor);
 }

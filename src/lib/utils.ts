@@ -6,5 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export async function hashAuthor(author: string) {
-  return crypto.subtle.digest('SHA-256', new TextEncoder().encode(author)).then((hash) => Buffer.from(hash).toString('hex'));
+  return crypto.subtle
+    .digest('SHA-256', new TextEncoder().encode(author))
+    .then((hash) => Buffer.from(hash).toString('hex'));
 }

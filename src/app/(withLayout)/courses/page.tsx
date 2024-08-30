@@ -67,8 +67,9 @@ export default function Page() {
               </Link>
               <div className="flex flex-col px-2">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  {course.professors_overalls.slice(0, 4).map(
-                    ({ professor, profile_icon, overall }) => (
+                  {course.professors_overalls
+                    .slice(0, 4)
+                    .map(({ professor, profile_icon, overall }) => (
                       <Link
                         href={`/professors/${professor}/${course.id}`}
                         passHref
@@ -89,14 +90,12 @@ export default function Page() {
                           </p>
                           <div className="grow text-sm justify-end flex flex-row gap-1 items-center">
                             <div className="rounded py-1 px-2 bg-green-500 text-secondary">
-                              {overall ?? 'N/A'}
+                              {overall ?? 'N/A'}/5
                             </div>
-                            Overall
                           </div>
                         </div>
                       </Link>
-                    ),
-                  )}
+                    ))}
                 </div>
               </div>
             </div>
