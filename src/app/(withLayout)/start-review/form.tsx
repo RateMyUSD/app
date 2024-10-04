@@ -1,5 +1,10 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CheckIcon, ChevronDown, Info } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -38,11 +43,8 @@ import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { GRADE_OPTIONS } from '@/constants';
 import { cn, getLastXYears } from '@/lib/utils';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CheckIcon, ChevronDown, Info } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { useToast } from '@/hooks/use-toast';
+import { useSession } from 'next-auth/react';
 
 const formSchema = z.object({
   professor: z.string(),
@@ -91,6 +93,8 @@ export default function ReviewForm({
   professors: string[];
   courses: string[];
 }) {
+  const { toast } = useToast();
+  const session = useSession();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -109,7 +113,21 @@ export default function ReviewForm({
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    fetch('/api/v1/reviews', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({...values, author: session.data?.user?.email }),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error);
+        }
+        toast({ title: 'Review created!', duration: 7500 })
+      })
+      .catch((e) => toast({ title: 'Error', description: e.message || 'An error occured while creating the review.', duration: 7500 }));
   }
 
   return (
@@ -342,6 +360,7 @@ export default function ReviewForm({
             />
             {metrics.map((metric) => (
               <FormField
+                key={metric.name}
                 control={form.control}
                 name={`metrics.${metric.name as 'clarity' | 'easiness' | 'helpfulness' | 'workload'}`}
                 render={({ field: { value, onChange } }) => (

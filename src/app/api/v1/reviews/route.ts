@@ -15,7 +15,8 @@ export async function POST(request: Request) {
     !reviewBody.course ||
     !reviewBody.body ||
     !reviewBody.author ||
-    !reviewBody.term
+    !reviewBody.term ||
+    !reviewBody.metrics
   ) {
     return Response.json({ error: 'Invalid request' }, { status: 400 });
   }
@@ -130,5 +131,26 @@ export async function POST(request: Request) {
     return Response.json({ error: 'Failed to create review' }, { status: 500 });
   }
 
-  return Response.json({ message: 'Review created!' }, { status: 201 });
+  let professorOverallsForCourse = professorOveralls.find(({ course }) => course == review.course);
+  Object.keys(professorOverallsForCourse!.metrics).forEach((metric) => {
+    const oldValue = professorOverallsForCourse!.metrics[metric as keyof typeof review.metrics];
+
+    professorOverallsForCourse!.metrics[metric as keyof typeof review.metrics] = oldValue
+      ? (oldValue + review.metrics[metric as keyof typeof review.metrics] ?? 0) / 2
+      : review.metrics[metric  as keyof typeof review.metrics] ?? 0;
+  })
+  await client
+    .db(process.env.MONGODB_DB)
+    .collection<ProfessorCourseRatingOverall>(Collections.ProfessorCourseOveralls)
+    .updateOne(
+      { professor: review.professor, course: review.course },
+      {
+        $set: {
+          metrics: professorOverallsForCourse!.metrics,
+          overall: Object.values(professorOverallsForCourse!.metrics).reduce((a, b) => a + b, 0) / Object.values(professorOverallsForCourse!.metrics).length
+        }
+      }
+    );
+
+  return Response.json({ message: 'Review created!', id: status.insertedId }, { status: 201 });
 }

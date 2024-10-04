@@ -1,5 +1,3 @@
-import { Dots } from '@/components/dots';
-import { Button } from '@/components/ui/button';
 import {
   BookText,
   GraduationCap,
@@ -7,6 +5,9 @@ import {
   SquarePen,
 } from 'lucide-react';
 import Link from 'next/link';
+
+import { Dots } from '@/components/dots';
+import { Button } from '@/components/ui/button';
 
 export default function Page() {
   return (

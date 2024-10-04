@@ -34,7 +34,6 @@ export default function Page() {
   });
   if (!data) return <div>Loading...</div>;
 
-  console.log(data);
   return (
     <>
       <h1 className="py-2">Courses</h1>
@@ -102,9 +101,13 @@ export default function Page() {
           ));
         })}
       </div>
-      <div className="flex justify-center mt-2">
-        <Button onClick={() => setSize(size + 1)}>Load more Courses...</Button>
-      </div>
+      {
+        // @ts-ignore
+        data[size - 1].length % 10 == 0 &&
+        <div className="flex justify-center mt-2">
+          <Button onClick={() => setSize(size + 1)}>Load more Courses...</Button>
+        </div>
+      }
     </>
   );
 }

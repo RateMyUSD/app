@@ -1,6 +1,7 @@
+import { ObjectId } from 'mongodb';
+
 import client, { Collections } from '@/lib/db';
 import type { ProfessorCourseReview } from '@/types';
-import { ObjectId } from 'mongodb';
 
 export async function GET(
   _: Request,
