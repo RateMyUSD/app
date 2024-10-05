@@ -14,7 +14,7 @@ export default function Footer() {
             <MessageSquareHeart size={25} />
           </Link>
           <div className="flex flex-row gap-2 text-foreground mt-1">
-            <Link href="https://github.com/tonydawhale/usd" target="_blank">
+            <Link href="https://github.com/RateMyUSD/app" target="_blank">
               <Github size={20} />
             </Link>
             <Link href="mailto:twhalen@sandiego.edu">

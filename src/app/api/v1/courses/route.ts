@@ -86,6 +86,10 @@ export async function GET(req: NextRequest) {
     ])
     .toArray();
 
+  if (!aggregation.length) {
+    return Response.json({ error: 'No courses found' }, { status: 404 });
+  }
+
   return Response.json(aggregation);
 }
 

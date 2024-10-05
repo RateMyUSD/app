@@ -32,11 +32,11 @@ export default function Layout({
             <BreadcrumbItem className="capitalize">
               {hasCourse ? (
                 <BreadcrumbLink href={`/professors/${params.professor}`}>
-                  {(params.professor as string).split('-').join(' ')}
+                  {(params.professor as string).split('_').join(' ')}
                 </BreadcrumbLink>
               ) : (
                 <BreadcrumbPage>
-                  {(params.professor as string).split('-').join(' ')}
+                  {(params.professor as string).split('_').join(' ')}
                 </BreadcrumbPage>
               )}
             </BreadcrumbItem>

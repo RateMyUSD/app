@@ -3,13 +3,17 @@ import Image from 'next/image';
 import { signIn } from '@/auth';
 import { Button } from '@/components/ui/button';
 
-export default function Page() {
+export default function Page({
+  searchParams,
+}: {
+  searchParams: { next?: string };
+}) {
   return (
     <form
       className="container flex items-center justify-center h-screen"
       action={async () => {
         'use server';
-        await signIn('google', { redirectTo: '/' });
+        await signIn('google', { redirectTo: searchParams.next ?? '/' });
       }}
     >
       <div className="rounded-lg border p-6 min-w-[348px] mt-[-100px]">

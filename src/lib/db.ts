@@ -1,5 +1,7 @@
 import { MongoClient } from 'mongodb';
 
+import type { Course } from '@/types';
+
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
 }
@@ -34,4 +36,30 @@ export enum Collections {
   Professors = 'professors',
   ProfessorCourseOveralls = 'professor_course_overalls',
   CourseReviews = 'course_reviews',
+}
+
+export async function getCourseIdsFromDB() {
+  const courseIds = await client
+    .db(process.env.MONGODB_DB)
+    .collection<Course>(Collections.Courses)
+    .distinct('id');
+
+  return courseIds;
+}
+
+export async function getProfessorNamesFromDB() {
+  const professorIds = await client
+    .db(process.env.MONGODB_DB)
+    .collection<Course>(Collections.Professors)
+    .aggregate([
+      {
+        $project: {
+          _id: 0,
+          full_name: { $concat: ['$first_name', '_', '$last_name'] },
+        },
+      },
+    ])
+    .toArray();
+
+  return professorIds.map(({ full_name }) => full_name);
 }

@@ -8,3 +8,4 @@ RateMyUSD is a web application that allows students to rate their professors and
 - [MongoDB](https://www.mongodb.com/)
 - [shadcn/ui](https://ui.shadcn.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
+- [OpenAI Moderation](https://platform.openai.com/docs/guides/moderation/overview)
