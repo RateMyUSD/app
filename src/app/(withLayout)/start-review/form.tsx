@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckIcon, ChevronDown, Info } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -42,9 +43,8 @@ import {
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { GRADE_OPTIONS } from '@/constants';
-import { cn, getLastXYears } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { useSession } from 'next-auth/react';
+import { cn, getLastXYears } from '@/lib/utils';
 
 const formSchema = z.object({
   professor: z.string(),
@@ -118,16 +118,23 @@ export default function ReviewForm({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({...values, author: session.data?.user?.email }),
+      body: JSON.stringify({ ...values, author: session.data?.user?.email }),
     })
       .then(async (res) => {
         const data = await res.json();
         if (!res.ok) {
           throw new Error(data.error);
         }
-        toast({ title: 'Review created!', duration: 7500 })
+        toast({ title: 'Review created!', duration: 7500 });
       })
-      .catch((e) => toast({ title: 'Error', description: e.message || 'An error occured while creating the review.', duration: 7500 }));
+      .catch((e) =>
+        toast({
+          title: 'Error',
+          description:
+            e.message || 'An error occured while creating your review!',
+          duration: 7500,
+        }),
+      );
   }
 
   return (
@@ -329,7 +336,7 @@ export default function ReviewForm({
                       className="w-[260px] text-sm"
                     >
                       You are never required to provide a grade, but it can be
-                      helpful for other students to understand a professor's
+                      helpful for other students to understand a professor&apos;s
                       grade distributions. Any grade you provide will be kept
                       anonymous and cannot be related back to you.
                     </HoverCardContent>
@@ -351,7 +358,7 @@ export default function ReviewForm({
                     </FormControl>
                     <SelectContent>
                       {GRADE_OPTIONS.map((grade) => (
-                        <SelectItem value={grade}>{grade}</SelectItem>
+                        <SelectItem value={grade} key={grade}>{grade}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>

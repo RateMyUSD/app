@@ -131,26 +131,42 @@ export async function POST(request: Request) {
     return Response.json({ error: 'Failed to create review' }, { status: 500 });
   }
 
-  let professorOverallsForCourse = professorOveralls.find(({ course }) => course == review.course);
+  let professorOverallsForCourse = professorOveralls.find(
+    ({ course }) => course == review.course,
+  );
   Object.keys(professorOverallsForCourse!.metrics).forEach((metric) => {
-    const oldValue = professorOverallsForCourse!.metrics[metric as keyof typeof review.metrics];
+    const oldValue =
+      professorOverallsForCourse!.metrics[
+        metric as keyof typeof review.metrics
+      ];
 
-    professorOverallsForCourse!.metrics[metric as keyof typeof review.metrics] = oldValue
-      ? (oldValue + review.metrics[metric as keyof typeof review.metrics] ?? 0) / 2
-      : review.metrics[metric  as keyof typeof review.metrics] ?? 0;
-  })
+    professorOverallsForCourse!.metrics[metric as keyof typeof review.metrics] =
+      oldValue
+        ? (oldValue + review.metrics[metric as keyof typeof review.metrics] ??
+            0) / 2
+        : (review.metrics[metric as keyof typeof review.metrics] ?? 0);
+  });
   await client
     .db(process.env.MONGODB_DB)
-    .collection<ProfessorCourseRatingOverall>(Collections.ProfessorCourseOveralls)
+    .collection<ProfessorCourseRatingOverall>(
+      Collections.ProfessorCourseOveralls,
+    )
     .updateOne(
       { professor: review.professor, course: review.course },
       {
         $set: {
           metrics: professorOverallsForCourse!.metrics,
-          overall: Object.values(professorOverallsForCourse!.metrics).reduce((a, b) => a + b, 0) / Object.values(professorOverallsForCourse!.metrics).length
-        }
-      }
+          overall:
+            Object.values(professorOverallsForCourse!.metrics).reduce(
+              (a, b) => a + b,
+              0,
+            ) / Object.values(professorOverallsForCourse!.metrics).length,
+        },
+      },
     );
 
-  return Response.json({ message: 'Review created!', id: status.insertedId }, { status: 201 });
+  return Response.json(
+    { message: 'Review created!', id: status.insertedId },
+    { status: 201 },
+  );
 }

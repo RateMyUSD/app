@@ -103,10 +103,13 @@ export default function Page() {
       </div>
       {
         // @ts-ignore
-        data[size - 1].length % 10 == 0 &&
-        <div className="flex justify-center mt-2">
-          <Button onClick={() => setSize(size + 1)}>Load more Courses...</Button>
-        </div>
+        data[size - 1].length % 10 == 0 && (
+          <div className="flex justify-center mt-2">
+            <Button onClick={() => setSize(size + 1)}>
+              Load more Courses...
+            </Button>
+          </div>
+        )
       }
     </>
   );

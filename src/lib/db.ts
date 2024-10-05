@@ -1,5 +1,6 @@
-import { Course } from '@/types';
 import { MongoClient } from 'mongodb';
+
+import type { Course } from '@/types';
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
@@ -54,9 +55,9 @@ export async function getProfessorNamesFromDB() {
       {
         $project: {
           _id: 0,
-          full_name: { $concat: ['$first_name', '_', '$last_name'] }
-        }
-      }
+          full_name: { $concat: ['$first_name', '_', '$last_name'] },
+        },
+      },
     ])
     .toArray();
 
